@@ -1,0 +1,185 @@
+
+.register-card {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 10px;
+  padding: 32px;
+  box-shadow: 0 8px 30px rgba(20, 70, 60, 0.07);
+  width: 100%;
+  max-width: 400px; 
+}
+
+.register-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #102b3d;
+  margin-bottom: 8px;
+}
+
+.register-subtitle {
+  color: #62778a;
+  font-size: 13px;
+  margin-bottom: 25px;
+}
+
+
+/* Form */
+
+.form-group {
+  margin-bottom: 17px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: #233c50;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.input-wrapper {
+  height: 42px;
+  border: 1px solid #d5dfe4;
+  border-radius: 7px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 11px;
+  background: white;
+}
+
+.input-wrapper:focus-within {
+  border-color: #15aa75;
+}
+
+.input-icon {
+  color: #61788a;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.input-wrapper input {
+  border: none;
+  outline: none;
+  width: 100%;
+
+  font-size: 12px;
+  color: #102b3d;
+}
+
+.input-wrapper input::placeholder {
+  color: #8a9bab;
+}
+
+
+/* Register button */
+
+.register-btn {
+  width: 100%;
+  height: 40px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #12ad76;
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  margin-top: 5px;
+
+  transition: 0.2s;
+}
+
+.register-btn:hover {
+  background: #0d9665;
+}
+
+
+/* Login text */
+
+.login-text {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 0;
+
+  font-size: 12px;
+  color: #687b8b;
+}
+
+.login-text button {
+  color: #12a36f;
+  font-weight: 600;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding-left: 5px;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}
+
+
+.form-message {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+
+    border-radius: 7px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    font-size: 12px;
+
+    margin-bottom: 18px;
+}
+
+
+/* Success */
+
+.form-message.success {
+    background: #eaf9f2;
+    border: 1px solid #b9e8d2;
+    color: #138a5d;
+}
+
+.form-message.success i {
+    color: #12a36f;
+}
+
+
+/* Error */
+
+.form-message.error {
+    background: #fff1f1;
+    border: 1px solid #f2c5c5;
+    color: #c03939;
+}
+
+.form-message.error i {
+    color: #d9534f;
+}
+
+
+/* Responsive */
+
+@media (max-width: 767px) {
+
+  .register_page {
+    padding: 30px 15px;
+  }
+
+  .register-card {
+    padding: 25px;
+  }
+
+}
+
+
+

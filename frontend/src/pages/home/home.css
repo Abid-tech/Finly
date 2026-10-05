@@ -1,0 +1,749 @@
+
+
+.home_page {
+  font-family: "Inter", Arial, sans-serif;
+  color: var(--font-color);
+}
+
+.home_page a {
+  text-decoration: none;
+}
+
+
+/* Navbar part start */
+.logo_part {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.brand-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-color);
+  font-weight: 900;
+  padding-bottom: 10px;
+}
+
+.navbar_links a.active::after{
+    bottom: 2px!important;
+}
+
+.navbar_links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  height: 100%;
+}
+
+.navbar_links a {
+  color: #53677a;
+  font-size: 12px;
+  font-weight: 500;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.navbar_links a.active {
+  color: #12a36f;
+}
+
+.navbar_links > a:hover {
+  color: #12a36f;
+}
+
+
+
+.navbar_links a.active::after {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #12a36f;
+}
+
+
+.user-dropdown {
+  position: relative;
+  margin-left: 8px;
+}
+
+.user-dropdown-btn {
+  border: none;
+  background: transparent;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #102b3d;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: background 0.2s ease;
+}
+
+.user-dropdown-btn:hover {
+  background: #f1f8f5;
+}
+
+.user-icon {
+  color: #12a36f;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  color: #607587;
+  margin-left: 2px;
+}
+
+
+/* Dropdown menu */
+.dropdown-menu-custom {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 150px;
+  background: white;
+  border: 1px solid #e1ebe7;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 8px 25px rgba(28, 84, 66, 0.12);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.user-dropdown:hover .dropdown-menu-custom {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+
+/* Logout */
+.dropdown-logout {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: 6px;
+  color: #c03939;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dropdown-logout:hover {
+  background: #fff1f1;
+}
+
+.dropdown-logout i {
+  font-size: 15px;
+}
+
+
+
+
+
+/* Hero part start */
+
+.hero_background {
+  background: linear-gradient(
+    110deg,
+    #f0fbf7 0%,
+    #f8fffd 55%,
+    #eefbf7 100%
+  );
+}
+
+.hero-section {
+  min-height: 520px;
+  padding-top: 50px;
+  padding-bottom: 45px;
+}
+
+.hero-left {
+  position: relative;
+  min-height: 440px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+}
+
+.small-title,
+.section-label {
+  color: #12a36f;
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.hero-content h1 {
+  font-size: 40px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #102b3d;
+  margin-bottom: 20px;
+}
+
+.hero-description {
+  color: #50677b;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 420px;
+  margin-bottom: 17px;
+}
+
+.hero-note {
+  color: #607587;
+  font-size: 13px;
+}
+
+
+
+/* Saving card */
+
+.saving-card {
+  width: 225px;
+  height: 100px;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  position: absolute;
+  left: 50px;
+  bottom: 50px;
+  z-index: 10;
+  box-shadow: 0 10px 30px rgba(28, 84, 66, 0.08);
+}
+
+.saving-card-2{
+    left: 290px;
+    bottom: 10px;
+}
+
+.saving-card-top {
+  display: flex;
+  justify-content: space-between;
+  color: #586e7e;
+  font-size: 11px;
+}
+
+.saving-card h4 {
+  font-size: 18px;
+  margin: 7px 0 10px;
+  color: #102b3d;
+}
+
+.saving-progress {
+  height: 8px;
+  width: 100%;
+  background: #e8eeee;
+  border-radius: 10px;
+}
+
+.saving-progress div {
+  height: 100%;
+  width: 48%;
+  border-radius: 10px;
+  background: #12a36f;
+}
+.saving-card-2 .saving-progress div {
+  height: 100%;
+  width: 80%;
+  border-radius: 10px;
+  background: #a31246 ;
+}
+
+
+
+
+
+
+
+/* How it works part start */
+
+.how-it-works {
+  background: #ffffff;
+  padding: 58px 0 65px;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 42px;
+}
+
+.section-heading .section-label {
+  margin-bottom: 12px;
+}
+
+.section-heading h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #102b3d;
+}
+
+.steps-row {
+  margin-top: 10px;
+}
+
+.step-card {
+  position: relative;
+  padding: 0 5px;
+}
+
+.step-number {
+  color: #11a773;
+  font-size: 17px;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.step-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 18px;
+}
+
+.income-icon {
+  color: #12a36f;
+  background: #e9faf3;
+}
+
+.expense-icon {
+  color: #2862db;
+  background: #edf3ff;
+}
+
+.saving-icon {
+  color: #6544d9;
+  background: #f3edff;
+}
+
+.step-card h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #102b3d;
+}
+
+.step-card p {
+  max-width: 220px;
+  color: #607589;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+
+/* Feature part start */
+
+.features-section {
+  background: #f2fbf8;
+  padding: 58px 0 65px;
+}
+
+.feature-card {
+  min-height: 125px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #dcebe6;
+  border-radius: 11px;
+  padding: 23px 25px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.feature-icon {
+  min-width: 60px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+}
+
+.feature-icon.green {
+  color: #0da76f;
+  background: #e9faf3;
+}
+
+.feature-icon.blue {
+  color: #2862dc;
+  background: #edf3ff;
+}
+
+.feature-icon.purple {
+  color: #6545d8;
+  background: #f2edff;
+}
+
+.feature-icon.orange {
+  color: #f08a25;
+  background: #fff3e7;
+}
+
+.feature-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #102b3d;
+}
+
+.feature-card p {
+  color: #65798b;
+  font-size: 12px;
+  line-height: 1.7;
+  max-width: 290px;
+  margin-bottom: 0;
+}
+
+
+/* Footer part start */
+
+.footer {
+  background: white;
+  padding: 15px 0;
+}
+
+.footer-txt{
+    text-align: center!important;
+}
+
+.footer-txt h3{
+  font-size: 14px;
+  color: var(--green-color);
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
+}
+.footer-txt span{
+    color: var(--font-color);
+    font-weight: normal;
+}
+
+
+.hero-right {
+  display: flex;
+  justify-content: end; 
+  align-items: center;
+}
+
+
+
+/* Responsive part start */
+
+
+/* ---------- Large Tablet / Small Desktop ---------- */
+
+@media (max-width: 1199px) {
+
+    .hero-left {
+        min-height: 500px;
+    }
+
+    .saving-card {
+        left: 20px;
+        bottom: 20px;
+    }
+
+    .saving-card-2 {
+        left: auto;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .hero-right {
+        justify-content: center;
+    }
+
+    .login-card {
+        max-width: 420px;
+    }
+
+}
+
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 991px) {
+
+    .hero-section {
+        padding-top: 40px;
+    }
+
+    .hero-left {
+        min-height: 420px;
+        margin-bottom: 30px;
+    }
+
+    .hero-right {
+        justify-content: center;
+    }
+
+    .saving-card {
+        left: 30px;
+        bottom: 20px;
+    }
+
+    .saving-card-2 {
+        left: auto;
+        right: 30px;
+        bottom: 20px;
+    }
+
+    .login-card {
+        max-width: 420px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 767px) {
+
+    .logo_part {
+        height: 70px;
+    }
+
+    .navbar_links {
+        gap: 15px;
+    }
+
+    .navbar_links a {
+        font-size: 12px;
+    }
+
+
+    /* Hero */
+
+    .hero-content {
+        text-align: center;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+    }
+
+    .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    /*
+       IMPORTANT:
+       Remove the large artificial height.
+    */
+
+    .hero-left {
+        min-height: auto;
+        margin-bottom: 30px;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    /*
+       Saving cards are now part of the
+       normal document flow.
+    */
+
+    .saving-card,
+    .saving-card-2 {
+
+        position: relative;
+
+        width: 210px;
+        height: 100px;
+
+        left: auto;
+        right: auto;
+        bottom: auto;
+
+        transform: none;
+
+        margin-top: 20px;
+    }
+
+
+    /*
+       Put the first card after hero content.
+    */
+
+    .saving-card {
+        align-self: flex-start;
+        margin-left: 0;
+    }
+
+
+    /*
+       Put second card on the right.
+    */
+
+    .saving-card-2 {
+        align-self: flex-end;
+        margin-right: 0;
+    }
+
+
+    /* =====================================
+       HOW IT WORKS
+    ===================================== */
+
+    .steps-row {
+        margin-top: 10px;
+    }
+
+    /*
+       Center each Bootstrap column's content.
+    */
+
+    .steps-row > div {
+        display: flex;
+        justify-content: center;
+    }
+
+    .step-card {
+        width: 100%;
+        text-align: center;
+        padding: 0;
+        margin-bottom: 40px;
+    }
+
+    .step-number {
+        text-align: center;
+    }
+
+    .step-icon {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .step-card p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    .section-heading h2 {
+        font-size: 24px;
+    }
+
+
+    /* Footer */
+
+    .footer-left {
+        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .footer-links {
+        justify-content: center;
+        margin-top: 15px;
+    }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 575px) {
+
+    /*
+       Stack the saving cards naturally.
+    */
+
+    .saving-card,
+    .saving-card-2 {
+        width: 225px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .saving-card {
+        margin-top: 25px;
+    }
+
+    .saving-card-2 {
+        margin-top: 15px;
+    }
+
+}
+
+
+/* =========================================
+   EXTRA SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+    .navbar_links {
+        gap: 10px;
+    }
+
+    .navbar_links a {
+        font-size: 10px;
+    }
+
+    .brand-name {
+        font-size: 19px;
+    }
+
+    .hero-content h1 {
+        font-size: 29px;
+    }
+
+    .saving-card,
+    .saving-card-2 {
+        width: 210px;
+    }
+
+    .login-card {
+        padding: 22px;
+    }
+
+    .feature-card {
+        padding: 18px;
+    }
+
+}
