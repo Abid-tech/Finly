@@ -362,7 +362,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 32px;
+  margin-bottom: 25px;
 }
 
 .dashboard-label {
@@ -830,6 +830,82 @@
 .transaction-menu:hover {
   color: #12a36f;
 }
+
+.transaction-actions {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+.transaction-menu {
+  border: none;
+  background: transparent;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+
+.transaction-menu:hover {
+  background: #f3f4f6;
+}
+
+
+/* .transaction-dropdown {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  min-width: 130px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+} */
+
+
+.transaction-dropdown {
+    position: absolute;
+    right: 27px;
+    top: -4px;
+    min-width: 88px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    z-index: 100;
+}
+
+
+.transaction-dropdown button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 9px 11px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+}
+
+
+.transaction-dropdown button:hover {
+  background: #f3f4f6;
+}
+
+
+
+
 
 
 /* ================= RESPONSIVE ================= */

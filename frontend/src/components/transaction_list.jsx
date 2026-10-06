@@ -17,6 +17,9 @@ function Transactionlist({viewDate, financeData, setFinanceData, loading, format
     paymentMethod: 'Cash',
     note: '',
   });
+  const [editingTransaction, setEditingTransaction] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null);
+
 
     
   const openTransactionModal = () => {
@@ -33,6 +36,40 @@ function Transactionlist({viewDate, financeData, setFinanceData, loading, format
 
     setTransactionModal(true);
   };
+
+
+const openEditTransactionModal = (transaction) => {
+
+  setOpenMenuId(null);
+
+  setEditingTransaction(transaction);
+
+  setTransactionForm({
+
+    type: transaction.type || 'Expense',
+    description: transaction.description || '',
+    category:transaction.category || '',
+    amount:transaction.amount || '',
+
+    date:
+      transaction.date
+        ? new Date(transaction.date)
+            .toISOString()
+            .split('T')[0]
+        : '',
+
+    paymentMethod: transaction.paymentMethod || 'Cash',
+    note: transaction.note || '',
+
+  });
+
+
+  setTransactionModal(true);
+
+};
+
+
+
 
   
   const getDefaultTransactionDate = () => {
@@ -67,6 +104,7 @@ function Transactionlist({viewDate, financeData, setFinanceData, loading, format
 
   const closeTransactionModal = () => {
 
+    setEditingTransaction(null);
     setTransactionModal(false);
 
   };
@@ -88,72 +126,212 @@ function Transactionlist({viewDate, financeData, setFinanceData, loading, format
     };
   
     const handleTransactionSubmit = async (e) => {
-  
-      e.preventDefault();
-  
-  
-      try {
-  
-        const response = await fetch(
-          `${API_BASE}/finance/transaction`,
-          {
-            method: 'POST',
-  
-            headers: {
-              'Content-Type': 'application/json',
-            },
-  
-            credentials: 'include',
-  
-            body: JSON.stringify({
-              year: viewDate.year,
-  
-              month:
-                viewDate.month + 1,
-  
-              ...transactionForm,
-  
-              amount:
-                Number(transactionForm.amount),
-            }),
-          }
-        );
-  
-  
-        const data = await response.json();
-  
-  
-        if (!response.ok) {
-  
-          alert(
-            data.message ||
-            'Failed to add transaction.'
-          );
-  
-          return;
+
+  e.preventDefault();
+
+
+  try {
+
+    // ==========================================
+    // EDIT TRANSACTION
+    // ==========================================
+
+    if (editingTransaction) {
+
+      const response = await fetch(
+
+        `${API_BASE}/finance/transaction/${editingTransaction._id}`,
+
+        {
+
+          method: 'PUT',
+
+          headers: {
+
+            'Content-Type':
+              'application/json',
+
+          },
+
+          credentials: 'include',
+
+          body: JSON.stringify({
+
+            year:
+              viewDate.year,
+
+            month:
+              viewDate.month + 1,
+
+            ...transactionForm,
+
+            amount:
+              Number(transactionForm.amount),
+
+          }),
+
         }
-  
-  
+
+      );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        alert(
+          data.message ||
+          'Failed to update transaction.'
+        );
+
+        return;
+
+      }
+
+
+      // ----------------------------------------
+      // SAME MONTH
+      // ----------------------------------------
+
+      if (
+        !data.movedToAnotherMonth
+      ) {
+
         setFinanceData({
+
           ...data.finance,
-  
+
           transactions:
             data.finance.transactions || [],
+
         });
-  
-  
-        closeTransactionModal();
-  
-  
-      } catch (error) {
-  
-        console.error(error);
-  
-        alert('Something went wrong.');
-  
+
       }
-  
-    };
+
+
+      // ----------------------------------------
+      // MOVED TO ANOTHER MONTH
+      // ----------------------------------------
+
+      else {
+
+        /*
+          The transaction was moved out of
+          the currently displayed month.
+
+          Therefore reload the current month.
+        */
+
+        setFinanceData(
+          prev => ({
+
+            ...prev,
+
+            transactions:
+              prev.transactions.filter(
+                transaction =>
+                  transaction._id !==
+                  editingTransaction._id
+              ),
+
+          })
+        );
+
+      }
+
+
+      closeTransactionModal();
+
+      setEditingTransaction(null);
+
+      return;
+
+    }
+
+
+    // ==========================================
+    // ADD TRANSACTION
+    // ==========================================
+
+    const response = await fetch(
+
+      `${API_BASE}/finance/transaction`,
+
+      {
+
+        method: 'POST',
+
+        headers: {
+
+          'Content-Type':
+            'application/json',
+
+        },
+
+        credentials: 'include',
+
+        body: JSON.stringify({
+
+          year:
+            viewDate.year,
+
+          month:
+            viewDate.month + 1,
+
+          ...transactionForm,
+
+          amount:
+            Number(transactionForm.amount),
+
+        }),
+
+      }
+
+    );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      alert(
+        data.message ||
+        'Failed to add transaction.'
+      );
+
+      return;
+
+    }
+
+
+    setFinanceData({
+
+      ...data.finance,
+
+      transactions:
+        data.finance.transactions || [],
+
+    });
+
+
+    closeTransactionModal();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      'Something went wrong.'
+    );
+
+  }
+
+};
   
   
 
@@ -345,12 +523,49 @@ function Transactionlist({viewDate, financeData, setFinanceData, loading, format
                           </td>
 
 
-                          <td>
-                            <button className="transaction-menu">
+                         <td>
 
-                              <i className="bi bi-three-dots-vertical"></i>
+                            <div className="transaction-actions">
 
-                            </button>
+                              <button
+                                type="button"
+                                className="transaction-menu"
+                                onClick={() =>
+                                  setOpenMenuId(
+                                    openMenuId === transaction._id
+                                      ? null
+                                      : transaction._id
+                                  )
+                                }
+                              >
+
+                                <i className="bi bi-three-dots-vertical"></i>
+
+                              </button>
+
+
+                              {openMenuId === transaction._id && (
+
+                                <div className="transaction-dropdown">
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      openEditTransactionModal(transaction);
+                                    }}
+                                  >
+
+                                    <i className="bi bi-pencil"></i>
+
+                                    Edit
+
+                                  </button>
+
+                                </div>
+
+                              )}
+
+                            </div>
 
                           </td>
 
@@ -391,9 +606,12 @@ function Transactionlist({viewDate, financeData, setFinanceData, loading, format
                   FINANCIAL ACTIVITY
                 </p>
 
-                <h2>
-                  Add Transaction
-                </h2>
+                  <h2>
+                    {editingTransaction
+                      ? 'Edit Transaction'
+                      : 'Add Transaction'}
+                  </h2>
+
 
               </div>
 
@@ -646,7 +864,9 @@ function Transactionlist({viewDate, financeData, setFinanceData, loading, format
                   type="submit"
                   className="modal-submit-btn"
                 >
-                  Add Transaction
+                  {editingTransaction
+                    ? 'Update Transaction'
+                    : 'Add Transaction'}
                 </button>
 
               </div>

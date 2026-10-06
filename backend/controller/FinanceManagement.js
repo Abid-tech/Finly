@@ -386,9 +386,440 @@ const HandleGetFinanceReport = async (req, res) => {
 };
 
 
+
+const HandleUpdateTransaction = async (req, res) => {
+
+  try {
+
+    const userId =
+      req.user?.id ||
+      req.user?._id ||
+      req.user?.userId;
+
+
+    if (!userId) {
+
+      return res.status(401).json({
+        message: 'Unauthorized.',
+      });
+
+    }
+
+
+    const { transactionId } = req.params;
+
+    const {
+      year,
+      month,
+      type,
+      description,
+      category,
+      amount,
+      date,
+      paymentMethod,
+      note,
+    } = req.body;
+
+
+    // ==========================================
+    // VALIDATION
+    // ==========================================
+
+    if (
+      !transactionId ||
+      !type ||
+      !description ||
+      !category ||
+      !amount ||
+      !date
+    ) {
+
+      return res.status(400).json({
+        message: 'All required fields must be provided.',
+      });
+
+    }
+
+
+    if (
+      !['Expense', 'Earning', 'Saving'].includes(type)
+    ) {
+
+      return res.status(400).json({
+        message: 'Invalid transaction type.',
+      });
+
+    }
+
+
+    const newAmount = Number(amount);
+
+
+    if (
+      Number.isNaN(newAmount) ||
+      newAmount <= 0
+    ) {
+
+      return res.status(400).json({
+        message: 'Amount must be greater than 0.',
+      });
+
+    }
+
+
+    // ==========================================
+    // FIND THE OLD TRANSACTION
+    // ==========================================
+
+    const oldFinance =
+      await FinanceManagement.findOne({
+        userId,
+        monthKey:
+          `${year}-${String(month).padStart(2, '0')}`,
+        'transactions._id': transactionId,
+      });
+
+
+    if (!oldFinance) {
+
+      return res.status(404).json({
+        message: 'Transaction not found.',
+      });
+
+    }
+
+
+    const oldTransaction =
+      oldFinance.transactions.id(transactionId);
+
+
+    if (!oldTransaction) {
+
+      return res.status(404).json({
+        message: 'Transaction not found.',
+      });
+
+    }
+
+
+    // ==========================================
+    // DETERMINE OLD VALUES
+    // ==========================================
+
+    const oldType =
+      oldTransaction.type;
+
+    const oldAmount =
+      Number(oldTransaction.amount);
+
+
+    // ==========================================
+    // DETERMINE NEW MONTH
+    // ==========================================
+
+    const newDate =
+      new Date(date);
+
+
+    if (Number.isNaN(newDate.getTime())) {
+
+      return res.status(400).json({
+        message: 'Invalid transaction date.',
+      });
+
+    }
+
+
+    const newMonthKey =
+      `${newDate.getFullYear()}-${String(
+        newDate.getMonth() + 1
+      ).padStart(2, '0')}`;
+
+
+    const oldMonthKey =
+      oldFinance.monthKey;
+
+
+    // ==========================================
+    // CASE 1:
+    // SAME MONTH
+    // ==========================================
+
+    if (oldMonthKey === newMonthKey) {
+
+      oldTransaction.type = type;
+
+      oldTransaction.description =
+        description;
+
+      oldTransaction.category =
+        category;
+
+      oldTransaction.amount =
+        newAmount;
+
+      oldTransaction.date =
+        newDate;
+
+      oldTransaction.paymentMethod =
+        paymentMethod || 'Cash';
+
+      oldTransaction.note =
+        note || '';
+
+
+      // ----------------------------------------
+      // UPDATE TOTALS
+      // ----------------------------------------
+
+      oldFinance.Income.total =
+        Number(oldFinance.Income.total || 0);
+
+      oldFinance.Expense.total =
+        Number(oldFinance.Expense.total || 0);
+
+      oldFinance.Savings.total =
+        Number(oldFinance.Savings.total || 0);
+
+
+      // Remove old amount
+
+      if (oldType === 'Earning') {
+
+        oldFinance.Income.total -= oldAmount;
+
+      }
+
+      if (oldType === 'Expense') {
+
+        oldFinance.Expense.total -= oldAmount;
+
+      }
+
+      if (oldType === 'Saving') {
+
+        oldFinance.Savings.total -= oldAmount;
+
+      }
+
+
+      // Add new amount
+
+      if (type === 'Earning') {
+
+        oldFinance.Income.total += newAmount;
+
+      }
+
+      if (type === 'Expense') {
+
+        oldFinance.Expense.total += newAmount;
+
+      }
+
+      if (type === 'Saving') {
+
+        oldFinance.Savings.total += newAmount;
+
+      }
+
+
+      await oldFinance.save();
+
+
+      return res.status(200).json({
+
+        message:
+          'Transaction updated successfully.',
+
+        finance: oldFinance,
+
+      });
+
+    }
+
+
+    // ==========================================
+    // CASE 2:
+    // TRANSACTION MOVED TO ANOTHER MONTH
+    // ==========================================
+
+
+    // ------------------------------------------
+    // REMOVE FROM OLD MONTH
+    // ------------------------------------------
+
+    if (oldType === 'Earning') {
+
+      oldFinance.Income.total -= oldAmount;
+
+    }
+
+    if (oldType === 'Expense') {
+
+      oldFinance.Expense.total -= oldAmount;
+
+    }
+
+    if (oldType === 'Saving') {
+
+      oldFinance.Savings.total -= oldAmount;
+
+    }
+
+
+    oldFinance.transactions =
+      oldFinance.transactions.filter(
+        transaction =>
+          transaction._id.toString() !==
+          transactionId
+      );
+
+
+    await oldFinance.save();
+
+
+    // ------------------------------------------
+    // FIND / CREATE NEW MONTH
+    // ------------------------------------------
+
+    let newFinance =
+      await FinanceManagement.findOne({
+        userId,
+        monthKey: newMonthKey,
+      });
+
+
+    if (!newFinance) {
+
+      newFinance =
+        new FinanceManagement({
+
+          userId,
+
+          monthKey: newMonthKey,
+
+          Income: {
+            total: 0,
+            target: 0,
+          },
+
+          Expense: {
+            total: 0,
+            target: 0,
+          },
+
+          Savings: {
+            total: 0,
+            target: 0,
+          },
+
+          transactions: [],
+
+        });
+
+    }
+
+
+    // ------------------------------------------
+    // ADD TRANSACTION TO NEW MONTH
+    // ------------------------------------------
+
+    newFinance.transactions.push({
+
+      _id: transactionId,
+
+      type,
+
+      description,
+
+      category,
+
+      amount: newAmount,
+
+      date: newDate,
+
+      paymentMethod:
+        paymentMethod || 'Cash',
+
+      note: note || '',
+
+    });
+
+
+    // ------------------------------------------
+    // UPDATE NEW MONTH TOTAL
+    // ------------------------------------------
+
+    if (type === 'Earning') {
+
+      newFinance.Income.total =
+        Number(newFinance.Income.total || 0)
+        + newAmount;
+
+    }
+
+    if (type === 'Expense') {
+
+      newFinance.Expense.total =
+        Number(newFinance.Expense.total || 0)
+        + newAmount;
+
+    }
+
+    if (type === 'Saving') {
+
+      newFinance.Savings.total =
+        Number(newFinance.Savings.total || 0)
+        + newAmount;
+
+    }
+
+
+    await newFinance.save();
+
+
+    // ==========================================
+    // RETURN THE NEW MONTH
+    // ==========================================
+
+    return res.status(200).json({
+
+      message:
+        'Transaction updated successfully.',
+
+      finance: newFinance,
+
+      movedToAnotherMonth: true,
+
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      'Update transaction error:',
+      error
+    );
+
+
+    return res.status(500).json({
+
+      message:
+        'Failed to update transaction.',
+
+    });
+
+  }
+
+};
+
+
+
 module.exports = {
   HandleGetFinanceManagement,
   HandleUpdateFinanceManagement,
   HandleAddTransaction,
-  HandleGetFinanceReport
+  HandleGetFinanceReport,
+  HandleUpdateTransaction
 };
