@@ -6,13 +6,15 @@ import MonthSelector from '../../components/monthSelector';
 import API_BASE from '../../../lib/api_base'
 import Transactionlist from '../../components/transaction_list';
 import DownloadPdf from '../../components/downloadPdf';
+import FinanceChart from '../../components/FinanceCharts';
+import BackToTopButton from '../../components/BackToTopButton'
 
 
 
 function Dashboard() {
 
   const { user } = useContext(AuthContext);
-  
+
   const today = new Date();
 
   const [viewDate, setViewDate] = useState({
@@ -23,32 +25,25 @@ function Dashboard() {
 
 
   const [financeData, setFinanceData] = useState({
-    Income: {
-      total: 0,
-      target: 0,
-    },
+    Income: {total: 0,target: 0, },
 
-    Expense: {
-      total: 0,
-      target: 0,
-    },
+    Expense: {total: 0,target: 0,},
 
-    Savings: {
-      total: 0,
-      target: 0,
-    },
+    Savings: {total: 0, target: 0,},
 
     transactions: [],
   });
 
 
   const [loading, setLoading] = useState(false);
+  const [chartRefreshKey, setChartRefreshKey] = useState(0);
 
 
   // MODALS
 
   const [goalModal, setGoalModal] = useState(null);
   const [goalAmount, setGoalAmount] = useState('');
+  
 
 
 
@@ -80,20 +75,11 @@ function Dashboard() {
 
 
       setFinanceData({
-        Income: data.Income || {
-          total: 0,
-          target: 0,
-        },
+        Income: data.Income || {total: 0, target: 0,},
 
-        Expense: data.Expense || {
-          total: 0,
-          target: 0,
-        },
+        Expense: data.Expense || {total: 0, target: 0,},
 
-        Savings: data.Savings || {
-          total: 0,
-          target: 0,
-        },
+        Savings: data.Savings || {total: 0, target: 0,},
 
         transactions: data.transactions || [],
       });
@@ -105,6 +91,10 @@ function Dashboard() {
       setLoading(false);
 
     }
+  };
+
+  const refreshFinanceChart = () => {
+    setChartRefreshKey(prev => prev + 1);
   };
 
 
@@ -168,8 +158,7 @@ function Dashboard() {
       });
 
       closeGoalModal();
-
-
+      
     } catch (error) {
       console.error(error);
       alert('Something went wrong.');
@@ -226,10 +215,21 @@ function Dashboard() {
               <p className="dashboard-subtitle">Here's your financial overview.</p>
             </div>
 
-            <MonthSelector
-              viewDate={viewDate}
-              setViewDate={setViewDate}
-            />
+            <div className="dashboard-header-actions">
+
+              <MonthSelector
+                viewDate={viewDate}
+                setViewDate={setViewDate}
+              />
+
+              <DownloadPdf
+                formatDate={formatDate}
+                formatMoney={formatMoney}
+              />
+
+            </div>
+
+            
           </div>
 
           <div className="row summary-row">
@@ -438,12 +438,15 @@ function Dashboard() {
 
           </div>
 
-          {/*  PDF */}
+          {/* Finance Charts */}
+          <FinanceChart refreshKey={chartRefreshKey}/>
 
-        <DownloadPdf formatDate={formatDate} formatMoney={formatMoney} />
 
 
-        <Transactionlist viewDate= {viewDate} financeData={financeData} setFinanceData= {setFinanceData} loading={loading} formatMoney={formatMoney} formatDate={formatDate} />
+         <Transactionlist viewDate= {viewDate} financeData={financeData} setFinanceData= {setFinanceData} loading={loading} formatMoney={formatMoney} formatDate={formatDate} onTransactionChange={refreshFinanceChart}/>
+
+
+         <BackToTopButton/>
 
         </div>
       </section>

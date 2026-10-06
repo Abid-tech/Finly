@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import API_BASE from "../../lib/api_base"
 
-function Transactionlist({viewDate, financeData, setFinanceData, loading, formatMoney, formatDate}) {
+function Transactionlist({viewDate, financeData, setFinanceData, loading, formatMoney, formatDate, onTransactionChange}) {
     
 
   const today = new Date();  
@@ -112,10 +112,7 @@ const openEditTransactionModal = (transaction) => {
   
     const handleTransactionChange = (e) => {
   
-      const {
-        name,
-        value,
-      } = e.target;
+      const {name,value} = e.target;
   
   
       setTransactionForm(prev => ({
@@ -132,9 +129,7 @@ const openEditTransactionModal = (transaction) => {
 
   try {
 
-    // ==========================================
     // EDIT TRANSACTION
-    // ==========================================
 
     if (editingTransaction) {
 
@@ -145,7 +140,6 @@ const openEditTransactionModal = (transaction) => {
         {
 
           method: 'PUT',
-
           headers: {
 
             'Content-Type':
@@ -157,11 +151,9 @@ const openEditTransactionModal = (transaction) => {
 
           body: JSON.stringify({
 
-            year:
-              viewDate.year,
+            year: viewDate.year,
 
-            month:
-              viewDate.month + 1,
+            month: viewDate.month + 1,
 
             ...transactionForm,
 
@@ -175,8 +167,7 @@ const openEditTransactionModal = (transaction) => {
       );
 
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
 
       if (!response.ok) {
@@ -190,10 +181,7 @@ const openEditTransactionModal = (transaction) => {
 
       }
 
-
-      // ----------------------------------------
       // SAME MONTH
-      // ----------------------------------------
 
       if (
         !data.movedToAnotherMonth
@@ -209,20 +197,10 @@ const openEditTransactionModal = (transaction) => {
         });
 
       }
-
-
-      // ----------------------------------------
       // MOVED TO ANOTHER MONTH
-      // ----------------------------------------
 
       else {
 
-        /*
-          The transaction was moved out of
-          the currently displayed month.
-
-          Therefore reload the current month.
-        */
 
         setFinanceData(
           prev => ({
@@ -243,17 +221,15 @@ const openEditTransactionModal = (transaction) => {
 
 
       closeTransactionModal();
-
       setEditingTransaction(null);
+      onTransactionChange();
 
       return;
 
     }
 
 
-    // ==========================================
     // ADD TRANSACTION
-    // ==========================================
 
     const response = await fetch(
 
@@ -292,15 +268,13 @@ const openEditTransactionModal = (transaction) => {
     );
 
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
 
     if (!response.ok) {
 
       alert(
-        data.message ||
-        'Failed to add transaction.'
+        data.message || 'Failed to add transaction.'
       );
 
       return;
@@ -312,11 +286,11 @@ const openEditTransactionModal = (transaction) => {
 
       ...data.finance,
 
-      transactions:
-        data.finance.transactions || [],
+      transactions: data.finance.transactions || [],
 
     });
-
+    
+    onTransactionChange();
 
     closeTransactionModal();
 
@@ -325,9 +299,7 @@ const openEditTransactionModal = (transaction) => {
 
     console.error(error);
 
-    alert(
-      'Something went wrong.'
-    );
+    alert('Something went wrong.');
 
   }
 
@@ -713,18 +685,13 @@ const openEditTransactionModal = (transaction) => {
 
               </div>
 
-
-
               <div className="modal-form-row">
-
 
                 {/* AMOUNT */}
 
                 <div className="form-group">
 
-                  <label>
-                    Amount
-                  </label>
+                  <label> Amount </label>
 
                   <div className="amount-input">
 

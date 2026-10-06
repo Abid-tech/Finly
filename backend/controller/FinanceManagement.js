@@ -55,20 +55,9 @@ const HandleGetFinanceManagement = async (req, res) => {
         userId,
         monthKey,
 
-        Income: {
-          total: 0,
-          target: 0,
-        },
-
-        Expense: {
-          total: 0,
-          target: 0,
-        },
-
-        Savings: {
-          total: 0,
-          target: 0,
-        },
+        Income: { total: 0,target: 0 },
+        Expense: { total: 0,target: 0,},
+        Savings: {total: 0, target: 0,},
 
         transactions: [],
       };
@@ -86,10 +75,6 @@ const HandleGetFinanceManagement = async (req, res) => {
 };
 
 
-// --------------------------------------------------
-// SET GOAL / TARGET
-// PUT /finance-management/goal
-// --------------------------------------------------
 
 const HandleUpdateFinanceManagement = async (req, res) => {
   try {
@@ -101,12 +86,7 @@ const HandleUpdateFinanceManagement = async (req, res) => {
       });
     }
 
-    const {
-      year,
-      month,
-      type,
-      target,
-    } = req.body;
+    const {year, month, type, target } = req.body;
 
     if (!year || !month || !type || target === undefined) {
       return res.status(400).json({
@@ -421,10 +401,6 @@ const HandleUpdateTransaction = async (req, res) => {
     } = req.body;
 
 
-    // ==========================================
-    // VALIDATION
-    // ==========================================
-
     if (
       !transactionId ||
       !type ||
@@ -451,7 +427,6 @@ const HandleUpdateTransaction = async (req, res) => {
 
     }
 
-
     const newAmount = Number(amount);
 
 
@@ -466,13 +441,7 @@ const HandleUpdateTransaction = async (req, res) => {
 
     }
 
-
-    // ==========================================
-    // FIND THE OLD TRANSACTION
-    // ==========================================
-
-    const oldFinance =
-      await FinanceManagement.findOne({
+    const oldFinance = await FinanceManagement.findOne({
         userId,
         monthKey:
           `${year}-${String(month).padStart(2, '0')}`,
@@ -501,24 +470,14 @@ const HandleUpdateTransaction = async (req, res) => {
 
     }
 
+    const oldType = oldTransaction.type;
 
-    // ==========================================
-    // DETERMINE OLD VALUES
-    // ==========================================
-
-    const oldType =
-      oldTransaction.type;
-
-    const oldAmount =
-      Number(oldTransaction.amount);
+    const oldAmount =  Number(oldTransaction.amount);
 
 
-    // ==========================================
-    // DETERMINE NEW MONTH
-    // ==========================================
 
-    const newDate =
-      new Date(date);
+
+    const newDate =  new Date(date);
 
 
     if (Number.isNaN(newDate.getTime())) {
@@ -540,46 +499,24 @@ const HandleUpdateTransaction = async (req, res) => {
       oldFinance.monthKey;
 
 
-    // ==========================================
-    // CASE 1:
-    // SAME MONTH
-    // ==========================================
+    // CASE 1: SAME MONTH
 
     if (oldMonthKey === newMonthKey) {
 
       oldTransaction.type = type;
-
-      oldTransaction.description =
-        description;
-
-      oldTransaction.category =
-        category;
-
-      oldTransaction.amount =
-        newAmount;
-
-      oldTransaction.date =
-        newDate;
-
-      oldTransaction.paymentMethod =
-        paymentMethod || 'Cash';
-
-      oldTransaction.note =
-        note || '';
+      oldTransaction.description = description;
+      oldTransaction.category = category;
+      oldTransaction.amount = newAmount;
+      oldTransaction.date = newDate;
+      oldTransaction.paymentMethod = paymentMethod || 'Cash';
+      oldTransaction.note = note || '';
 
 
-      // ----------------------------------------
-      // UPDATE TOTALS
-      // ----------------------------------------
+      oldFinance.Income.total = Number(oldFinance.Income.total || 0);
 
-      oldFinance.Income.total =
-        Number(oldFinance.Income.total || 0);
+      oldFinance.Expense.total = Number(oldFinance.Expense.total || 0);
 
-      oldFinance.Expense.total =
-        Number(oldFinance.Expense.total || 0);
-
-      oldFinance.Savings.total =
-        Number(oldFinance.Savings.total || 0);
+      oldFinance.Savings.total =  Number(oldFinance.Savings.total || 0);
 
 
       // Remove old amount
@@ -639,16 +576,8 @@ const HandleUpdateTransaction = async (req, res) => {
     }
 
 
-    // ==========================================
-    // CASE 2:
-    // TRANSACTION MOVED TO ANOTHER MONTH
-    // ==========================================
-
-
-    // ------------------------------------------
-    // REMOVE FROM OLD MONTH
-    // ------------------------------------------
-
+    // CASE 2: TRANSACTION MOVED TO ANOTHER MONTH
+   
     if (oldType === 'Earning') {
 
       oldFinance.Income.total -= oldAmount;
@@ -679,9 +608,9 @@ const HandleUpdateTransaction = async (req, res) => {
     await oldFinance.save();
 
 
-    // ------------------------------------------
+
     // FIND / CREATE NEW MONTH
-    // ------------------------------------------
+    
 
     let newFinance =
       await FinanceManagement.findOne({
@@ -721,10 +650,8 @@ const HandleUpdateTransaction = async (req, res) => {
     }
 
 
-    // ------------------------------------------
     // ADD TRANSACTION TO NEW MONTH
-    // ------------------------------------------
-
+  
     newFinance.transactions.push({
 
       _id: transactionId,
@@ -747,9 +674,7 @@ const HandleUpdateTransaction = async (req, res) => {
     });
 
 
-    // ------------------------------------------
     // UPDATE NEW MONTH TOTAL
-    // ------------------------------------------
 
     if (type === 'Earning') {
 
@@ -778,10 +703,8 @@ const HandleUpdateTransaction = async (req, res) => {
 
     await newFinance.save();
 
-
-    // ==========================================
+    
     // RETURN THE NEW MONTH
-    // ==========================================
 
     return res.status(200).json({
 
