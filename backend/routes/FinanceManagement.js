@@ -8,7 +8,8 @@ const {
   HandleGetFinanceManagement,
   HandleUpdateFinanceManagement,
   HandleAddTransaction,
-  HandleGetFinanceReport
+  HandleGetFinanceReport,
+  HandleUpdateTransaction
 } = require('../controller/FinanceManagement');
 
 
@@ -36,6 +37,12 @@ router.get(
   '/report',
   AuthMiddleware,
   HandleGetFinanceReport
+);
+
+router.put(
+  '/transaction/:transactionId',
+  AuthMiddleware,
+  HandleUpdateTransaction
 );
 
 

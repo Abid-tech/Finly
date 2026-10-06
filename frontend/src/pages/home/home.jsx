@@ -4,10 +4,12 @@ import Login from "../../components/login/login";
 import Register from "../../components/register/register";
 import { useState } from "react";
 import Navbar from "../../components/navbar"
+import BackToTopButton from "../../components/BackToTopButton";
 
 function Home() {
 
-  const [isLogin, setIsLogin] = useState(true);   
+  const [isLogin, setIsLogin] = useState(true);  
+   
   return (
     <>
       <section className="home_page">
@@ -335,6 +337,8 @@ function Home() {
           </div>
 
         </section>
+
+        <BackToTopButton/>
 
 
         {/* Footer part start */}

@@ -467,7 +467,6 @@
 /* Responsive part start */
 
 
-/* ---------- Large Tablet / Small Desktop ---------- */
 
 @media (max-width: 1199px) {
 
@@ -497,7 +496,6 @@
 }
 
 
-/* ---------- Tablet ---------- */
 
 @media (max-width: 991px) {
 
@@ -532,10 +530,6 @@
 }
 
 
-/* =========================================
-   MOBILE
-========================================= */
-
 @media (max-width: 767px) {
 
     .logo_part {
@@ -567,10 +561,6 @@
     }
 
 
-    /*
-       IMPORTANT:
-       Remove the large artificial height.
-    */
 
     .hero-left {
         min-height: auto;
@@ -579,12 +569,6 @@
         display: flex;
         flex-direction: column;
     }
-
-
-    /*
-       Saving cards are now part of the
-       normal document flow.
-    */
 
     .saving-card,
     .saving-card-2 {
@@ -604,19 +588,10 @@
     }
 
 
-    /*
-       Put the first card after hero content.
-    */
-
     .saving-card {
         align-self: flex-start;
         margin-left: 0;
     }
-
-
-    /*
-       Put second card on the right.
-    */
 
     .saving-card-2 {
         align-self: flex-end;
@@ -624,17 +599,10 @@
     }
 
 
-    /* =====================================
-       HOW IT WORKS
-    ===================================== */
-
     .steps-row {
         margin-top: 10px;
     }
 
-    /*
-       Center each Bootstrap column's content.
-    */
 
     .steps-row > div {
         display: flex;
@@ -668,8 +636,6 @@
     }
 
 
-    /* Footer */
-
     .footer-left {
         justify-content: center;
         flex-direction: column;
@@ -682,16 +648,7 @@
     }
 }
 
-
-/* =========================================
-   SMALL MOBILE
-========================================= */
-
 @media (max-width: 575px) {
-
-    /*
-       Stack the saving cards naturally.
-    */
 
     .saving-card,
     .saving-card-2 {
@@ -711,9 +668,6 @@
 }
 
 
-/* =========================================
-   EXTRA SMALL MOBILE
-========================================= */
 
 @media (max-width: 480px) {
 

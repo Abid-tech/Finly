@@ -51,6 +51,7 @@ function Navbar() {
                   <nav className="navbar_links">
                       <a href="/dashboard">Dashboard</a>
                       <a href="#transactions-section">Expense List</a>
+                      <a href="#chart-section">Trend Chart</a>
 
                      
                   </nav>
