@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/user/:path*", "destination": "https://finly-nine-tan.vercel.app/user/:path*" },
+    { "source": "/finance/:path*", "destination": "https://finly-nine-tan.vercel.app/finance/:path*" },
+    { "source": "/(.*)", "destination": "https://finlyapp-five.vercel.app/$1" }
+  ]
+}
